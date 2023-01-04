@@ -10,7 +10,7 @@ class Konf < Hash
     when Hash
       source
     else
-      if File.exists?(source.to_s) && yaml = YAML.load(ERB.new(File.read(source.to_s)).result)
+      if File.exists?(source.to_s) && yaml = YAML.load(ERB.new(File.read(source.to_s)).result, aliases: true)
         yaml.to_hash
       else
         raise Invalid, "Invalid configuration input: #{source}"
