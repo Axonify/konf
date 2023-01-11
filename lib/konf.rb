@@ -10,7 +10,13 @@ class Konf < Hash
     when Hash
       source
     else
-      if File.exists?(source.to_s) && yaml = YAML.load(ERB.new(File.read(source.to_s)).result, aliases: true)
+      # https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias
+      yaml = begin
+               YAML.load(ERB.new(File.read(source.to_s)).result, aliases: true)
+             rescue ArgumentError
+               YAML.load(ERB.new(File.read(source.to_s)).result)
+             end
+      if File.exists?(source.to_s) && yaml =
         yaml.to_hash
       else
         raise Invalid, "Invalid configuration input: #{source}"
