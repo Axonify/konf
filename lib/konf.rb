@@ -16,7 +16,8 @@ class Konf < Hash
              rescue ArgumentError
                YAML.load(ERB.new(File.read(source.to_s)).result)
              end
-      if File.exists?(source.to_s) && yaml =
+
+      if File.exists?(source.to_s) && yaml.present?
         yaml.to_hash
       else
         raise Invalid, "Invalid configuration input: #{source}"
