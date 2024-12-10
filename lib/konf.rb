@@ -4,7 +4,7 @@ require 'erb'
 class Konf < Hash
   class NotFound  < StandardError; end
   class Invalid   < StandardError; end
-  
+
   def initialize(source, root = nil)
     hash = case source
     when Hash
@@ -17,7 +17,7 @@ class Konf < Hash
                YAML.load(ERB.new(File.read(source.to_s)).result)
              end
 
-      if File.exists?(source.to_s) && yaml.present?
+      if File.exist?(source.to_s) && yaml.present?
         yaml.to_hash
       else
         raise Invalid, "Invalid configuration input: #{source}"
@@ -28,7 +28,7 @@ class Konf < Hash
     end
     self.replace hash
   end
-  
+
   def method_missing(name, *args, &block)
     key = name.to_s
     if key.gsub!(/\?$/, '')
@@ -39,5 +39,5 @@ class Konf < Hash
       value.is_a?(Hash) ? Konf.new(value) : value
     end
   end
-  
+
 end
